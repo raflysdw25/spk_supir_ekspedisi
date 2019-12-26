@@ -1,7 +1,7 @@
 <?php
     require 'functions.php';
     
-    login_user($_POST);
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
