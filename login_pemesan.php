@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Halaman Login User</title>
+    <title>Halaman Login Pemesan</title>
 
     <link rel="stylesheet" href="libraries/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" href="styles/main.css">
@@ -17,7 +17,7 @@
     
       <div id="card-login" class="card">
           <div class="card-body">
-              <h4 class="text-center mb-4 display-4">Login User Supir Ekspedisi</h4>
+              <h4 class="text-center mb-4 display-4">Login Pemesan Supir Ekspedisi</h4>
                 <form>
                     <div class="form-group">
                         <label>Username</label>
