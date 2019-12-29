@@ -1,3 +1,33 @@
+<?php
+
+require 'functions.php';
+
+if( isset($_POST["login"]) ) {
+
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+
+    $result = mysqli_query($conn, "SELECT * FROM pemesan WHERE username_pmsn = '$username'");
+
+    //cek username
+    if(mysqli_num_rows($result) === 1 ) {
+
+        //cek password
+        $row = mysqli_fetch_assoc($result);
+        if( password_verify($password, $row["password_pmsn"]) ) {
+            header("Location: halaman_pemesan.php");
+            exit;
+
+        }
+
+    }
+
+    $error = true;
+
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,20 +42,24 @@
 
 </head>
   <body>
+
     <div class="container">
       
     
       <div id="card-login" class="card">
           <div class="card-body">
               <h4 class="text-center mb-4 display-4">Login Pemesan Supir Ekspedisi</h4>
-                <form>
+              <?php if( isset($error) ) : ?>
+                <p style="color: red; font-style: italic;">username / password salah</p>
+              <?php endif; ?>
+                <form action="" method="post">
                     <div class="form-group">
                         <label>Username</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text"><i class="fas fa-user"></i></div>
                             </div>
-                            <input type="text" name="" class="form-control" placeholder="Masukkan Username Anda">
+                            <input type="text" name="username" class="form-control" placeholder="Masukkan Username Anda" id="username">
                         </div>
                     </div>
 
@@ -35,13 +69,13 @@
                             <div class="input-group-prepend">
                                 <div class="input-group-text"><i class="fas fa-unlock-alt"></i></div>
                             </div>
-                            <input type="Password" name="" class="form-control" placeholder="Masukkan Password Anda">
+                            <input type="password" name="password" class="form-control" placeholder="Masukkan Password Anda" id="password">
                         </div>
                     </div>
 
                     <div id="btn-login" class="my-3">
-                        <button type="submit" class="btn btn-primary btn-block">SUBMIT</button>
-                        <button type="reset" class="btn btn-block text-muted">RESET</button>
+                        <button type="submit" name="login" class="btn btn-primary btn-block">SUBMIT</button>
+                        <button type="reset" name="reset" class="btn btn-block text-muted">RESET</button>
                     </div>
                 </form>
           </div>
