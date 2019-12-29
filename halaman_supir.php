@@ -8,7 +8,7 @@
   $query = "SELECT tr.id_transaksi, p.nama_pemesan, tr.jumlah_pesanan, tr.alamat_pengambilan,
             tr.alamat_tujuan, tr.jenis_pengiriman, tr.tanggal_sampai, tr.status_pengiriman, k.nama_krwn
             FROM transaksi_pemesanan tr JOIN pemesan p ON (tr.id_pemesan = p.id_pemesan) JOIN karyawan k ON
-            (tr.nik_krwn = k.nik_krwn)";
+            (tr.id_krwn = k.id_krwn)";
   $result = query($query);
   $jmlhpesanan = count($result);
 
