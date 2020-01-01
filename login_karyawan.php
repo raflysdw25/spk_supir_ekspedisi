@@ -1,3 +1,41 @@
+<?php
+    require 'functions.php';
+    session_start();
+
+    if( isset($_POST["login"]) ){
+
+        $username = $_POST["username"];
+        $password = $_POST["password"];
+
+        $result = mysqli_query($conn, "SELECT * FROM users WHERE username_user = '$username'");
+
+        //cek username
+        if(mysqli_num_rows($result) === 1 ) {
+
+            //cek password
+            $row = mysqli_fetch_assoc($result);
+            if( password_verify($password, $row["password_user"]) ) {
+                $_SESSION["login"] = true;
+                $_SESSION["id_karyawan"] = $row["id_krwn"];
+                if( $row["level_user"] == 'Admin' ){
+                    $_SESSION["jabatan"] = $row["level_user"];
+                    header("location: halaman_admin.php");
+                    exit;
+                }else if( $row["level_user"] == 'Supir' ){
+                    $_SESSION["jabatan"] = $row["level_user"];
+                    header("location: halaman_supir.php");
+                    exit;
+                }
+                
+
+            }
+
+        }
+
+        $error = true;
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,14 +56,14 @@
       <div id="card-login" class="card">
           <div class="card-body">
               <h4 class="text-center mb-4 display-4">Login Karyawan Supir Ekspedisi</h4>
-                <form>
+                <form action="" method="POST">
                     <div class="form-group">
                         <label>Username</label>
                         <div class="input-group">
                             <div class="input-group-prepend">
                                 <div class="input-group-text"><i class="fas fa-user"></i></div>
                             </div>
-                            <input type="text" name="" class="form-control" placeholder="Masukkan Username Anda">
+                            <input type="text" name="username" class="form-control" placeholder="Masukkan Username Anda">
                         </div>
                     </div>
 
@@ -35,12 +73,12 @@
                             <div class="input-group-prepend">
                                 <div class="input-group-text"><i class="fas fa-unlock-alt"></i></div>
                             </div>
-                            <input type="Password" name="" class="form-control" placeholder="Masukkan Password Anda">
+                            <input type="Password" name="password" class="form-control" placeholder="Masukkan Password Anda">
                         </div>
                     </div>
 
                     <div id="btn-login" class="my-3">
-                        <button type="submit" class="btn btn-primary btn-block">SUBMIT</button>
+                        <button type="submit" name="login" class="btn btn-primary btn-block">SUBMIT</button>
                         <button type="reset" class="btn btn-block text-muted">RESET</button>
                     </div>
                 </form>

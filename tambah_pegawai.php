@@ -3,13 +3,13 @@
     session_start();
 
     // Cek user telah login sebagai admin
-    // if( !isset($_SESSION["login"]) &&  $_SESSION["jabatan"] == "Admin"  ){
-    //     header("location:login_karyawan.php");
-    //     exit;
-    // }else if ( isset($_SESSION["login"]) && $_SESSION["jabatan"] == "Supir" ) {
-    //     header("javascript:history.go(-1)");
-    //     exit;
-    // }
+    if( !isset($_SESSION["login"]) &&  $_SESSION["jabatan"] == "Admin"  ){
+        header("location:login_karyawan.php");
+        exit;
+    }else if ( isset($_SESSION["login"]) && $_SESSION["jabatan"] == "Supir" ) {
+        header("javascript:history.go(-1)");
+        exit;
+    }
         
     $error = false;
     if ( isset($_POST["tambah_data"]) ) {
@@ -54,7 +54,7 @@
         </div>
         <?php endif;?>
 
-        <div id="form-tambah-pegawai">
+        <div id="form_tambah">
             <form action="" method="post">
                 <div class="form-group">
                     <label for="nikKaryawan" class="">NIK Karyawan</label>
@@ -87,7 +87,13 @@
 
                 <div class="form-group">
                     <label for="alamatKaryawan" class="">Alamat Karyawan</label>
-                    <input type="text" class="form-control" placeholder="Alamat Karyawan.." name="alamat_karyawan">
+                    <select name="alamat_pemesan" id="" class="custom-select">
+                        <option value="Jakarta">Jakarta</option>
+                        <option value="Bandung">Bandung</option>
+                        <option value="Semarang">Semarang</option>
+                        <option value="Yogyakarta">Yogyakarta</option>
+                        <option value="Surabaya">Surabaya</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -114,7 +120,7 @@
 
                 <div class="form-group">
                     <label for="telephoneKaryawan" class="">No Telephone Karyawan</label>
-                    <input type="text" class="form-control" placeholder="Telephone Karyawan.." name="telephone_karyawan">
+                    <input type="tel" class="form-control" placeholder="Telephone Karyawan.." name="telephone_karyawan">
                 </div>
 
                 <div class="form-group">

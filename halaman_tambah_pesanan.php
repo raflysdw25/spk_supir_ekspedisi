@@ -1,26 +1,43 @@
 <?php 
-require 'functions.php';
+  require 'functions.php';
+  session_start();
+  if ( !isset($_SESSION["login"]) && !isset($_SESSION["id_pemesan"]) ) {
+    header("location:login_pemesan.php");
+  }
 
-if( isset($_POST["submit"]) ) {
+  $id_pemesan = $_GET['id_pemesan'];
+  // var_dump($id_pemesan); die;
+
+  $query_all = "SELECT * FROM pemesan WHERE id_pemesan != $id_pemesan";
+  $pemesan_all = query($query_all);
+
+  $query_one = "SELECT * FROM pemesan WHERE id_pemesan =$id_pemesan";
+  $pemesan_one = query($query_one)[0];
 
 
-if( tambah_pesanan($_POST) > 0){
-	echo "
-		<script>
-			alert('Pemesanan berhasil ditambahkan!');
-			document.location.href = 'halaman_pemesan.php';
-		</script>
-	";
-} else {
-	echo "
-		<script>
-			alert('Pemesanan gagal ditambahkan!');
-			document.location.href = 'halaman_tambah_pemesanan.php';
-		</script>
-	";
-	}
+  if( isset($_POST["submit"]) ) {
+      // var_dump($_POST); die;
+      $transaksi = tambah_pesanan($_POST);
 
-}
+    if( $transaksi > 0){
+      echo "
+        <script>
+          alert('Pemesanan berhasil ditambahkan!');
+          
+        </script>
+      ";
+    } else {
+      echo "
+        <script>
+          alert('Pesanan gagal ditambahkan!');
+          
+        </script>
+      ";
+       echo mysqli_error($conn); 
+      // $_SESSION["error_transaksi"] = true;
+    }
+
+  }
 
 ?>
 
@@ -40,66 +57,69 @@ if( tambah_pesanan($_POST) > 0){
 
 </head>
 <body>
-	<div class="container" style="margin-top: 5%"> 
-        <h1 class="text-center">Tambah Pesanan</h1>
+	  <div class="container" style="margin-top: 5%"> 
+        <div id="form_tambah">
+          <h1 class="text-center display-4">Tambah Pesanan</h1>
+            <form class="" action="" method="POST">
+                
+                <!-- Atur nama pemesan sesuai dengan id_pemesan -->
+                <div class="form-group">
+                  <label class="" for="Nama Pesanan">Nama Pemesan</label>
+                  <input type="hidden" name="id_pemesan" value="<?= $pemesan_one["id_pemesan"];?>">
+                  <input type="text" class="form-control" id="Nama Pesanan" " name="" value="<?= $pemesan_one["nama_pemesan"];?>" readonly>
+                </div>
 
-        <form class="" action="">
-          
-          <div class="form-group">
-            <label class="" for="Nama Pesanan">Nama Pesanan</label>
-            <input type="Nama Pesanan" class="form-control" id="Nama Pesanan" " name="Nama Pesanan" required>
-          </div>
+                <div class="form-group">
+                  <label for="jumlahPesanan">Jumlah Pesanan</label>
+                  <input type="number" name="Jumlah_Pesanan" id="" class="form-control" placeholder="Jumlah Pesanan" aria-describedby="helpId">
+                </div>
 
-          <div class="form-group">
-            <label class="" for="AlamatPemesanan">Alamat Pemesanan</label>
-            <select name="Alamat Pemesanan" id="AlamatPemesanan" class="custom-select">
-                <option value="">Jakarta</option>
-                <option value="">Bandung</option>
-                <option value="">Semarang</option>
-                <option value="">Yogyakarta</option>
-                <option value="">Surabaya</option>
-            </select>
-          </div>
 
-          <div class="form-group">
-            <label class="" for="AlamatTujuan">Alamat Tujuan</label>
-            <select name="Alamat Tujuan" id="AlamatTujuan" class="custom-select">
-                <option value="">Jakarta</option>
-                <option value="">Bandung</option>
-                <option value="">Semarang</option>
-                <option value="">Yogyakarta</option>
-                <option value="">Surabaya</option>
-            </select>
-          </div>
-          
-          <div class="form-group"> 
-            <label class="control-label" for="JenisPengiriman" required>Jenis Pengiriman</label>
-            <br>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="carcarrier" 
-                value="Car Carrier" name="Jenis Pengiriman">
-                <label class="form-check-label" for="carcarrier">Car Carrier</label>
-            </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" id="safetyride" 
-                value="Safety Ride" name="Jenis Pengiriman">
-                <label class="form-check-label" for="safetyride">Safety Ride</label>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label class="" for="tanggal">Tanggal Sampai</label>
-            <input type="date" name="Tanggal" id="tanggal" class="form-control" required>
-          </div>
-          
-          <div class="text-center">
-            <button type="submit" class="btn btn-success" name="submit">Tambah Pesanan</button>
-            <a class="btn btn-danger text-white">Batalkan Pesanan</a>
-          </div>
-    </form>
-  </div>
+                <!-- Atur sesuai alamat pemesan sesuai dengan id_pemesan -->
+                <div class="form-group">
+                  <label class="" for="AlamatPemesanan">Cabang Pemesanan</label>
+                  <input type="text" name="Alamat_Pemesan" id="" class="form-control" value="<?= $pemesan_one["nama_pemesan"];?>" readonly>
+                </div>
 
-	</form>
+
+                <!-- Buat list alamat tujuan, ambil dari database, kemudian valuenya diubah dengan alamatnya dari pemesan -->
+                <div class="form-group">
+                  <label class="" for="AlamatTujuan">Alamat Tujuan</label>
+                  <select name="Alamat_Tujuan" id="AlamatTujuan" class="custom-select">
+                      <option value="" aria-readonly="true">Pilih Alamat Tujuan</option>
+                      <?php foreach($pemesan_all as $pemesan): ?>
+                        <option value="<?= $pemesan["nama_pemesan"]; ?>"> <?= $pemesan["nama_pemesan"]; ?> </option>
+                      <?php endforeach;?>
+                  </select>
+                </div>
+                
+                <div class="form-group"> 
+                  <label class="control-label" for="JenisPengiriman">Jenis Pengiriman</label>
+                  <br>
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="carcarrier" 
+                      value="Car Carrier" name="Jenis_Pengiriman">
+                      <label class="form-check-label" for="carcarrier">Car Carrier</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" id="safetyride" 
+                      value="Safety Ride" name="Jenis_Pengiriman">
+                      <label class="form-check-label" for="safetyride">Safety Ride</label>
+                  </div>
+                </div>
+                
+                <div class="form-group">
+                  <label class="" for="tanggal">Tanggal Sampai</label>
+                  <input type="date" name="Tanggal" id="tanggal" class="form-control" required>
+                </div>
+                
+                <div class="text-center">
+                  <button type="submit" class="btn btn-success" name="submit">Tambah Pesanan</button>
+                  <a href="halaman_pemesan.php" class="btn btn-danger text-white">Batalkan Pesanan</a>
+                </div>
+
+            </form>
+        </div>
 	</div>
 </body>
 </html>

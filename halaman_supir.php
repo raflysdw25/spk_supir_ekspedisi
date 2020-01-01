@@ -1,18 +1,62 @@
 <?php
   require "functions.php";
-
   // nik_krwn dengan jabatan supir
+  session_start();
+  // Cek user telah login sebagai supir
+  if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && $_SESSION["jabatan"] == "Supir"  ){
+      header("location:login_karyawan.php");
+      exit;
+  }
 
+  $id_karyawan = $_SESSION["id_karyawan"];
+  $jabatan = $_SESSION["jabatan"];
+  // var_dump($id_karyawan); var_dump($jabatan); die;
+
+  // Query data Supir
+  $query_supir = "SELECT * FROM karyawan WHERE id_krwn = '$id_karyawan' AND jabatan_krwn = '$jabatan'";
+  $supir = query($query_supir)[0];
+  $nama_krwn = $supir["nama_krwn"];
 
   // Menampilkan halaman admin
   $query = "SELECT tr.id_transaksi, p.nama_pemesan, tr.jumlah_pesanan, tr.alamat_pengambilan,
-            tr.alamat_tujuan, tr.jenis_pengiriman, tr.tanggal_sampai, tr.status_pengiriman, k.nama_krwn
-            FROM transaksi_pemesanan tr JOIN pemesan p ON (tr.id_pemesan = p.id_pemesan) JOIN karyawan k ON
-            (tr.id_krwn = k.id_krwn)";
+            tr.alamat_tujuan, tr.jenis_pengiriman, tr.tanggal_sampai, tr.status_pengiriman
+            FROM transaksi_pemesanan tr JOIN pemesan p ON (tr.id_pemesan = p.id_pemesan)
+            WHERE tr.nama_krwn = '$nama_krwn'";
   $result = query($query);
   $jmlhpesanan = count($result);
 
+  
 
+
+  // Ubah Status Supir
+  if( isset($_POST["status"]) ){
+     $status_krwn = $_POST["status_karyawan"];
+
+     $query_status = "UPDATE karyawan SET status_krwn = '$status_krwn' 
+                      WHERE id_krwn = '$id_karyawan'";
+     $update_status = mysqli_query($conn, $query_status);
+
+     if( mysqli_affected_rows($conn) > 0 ){
+       header("location:halaman_supir.php");
+       exit;
+     }
+
+  }
+
+  // Ubah Status Pengiriman
+  if( isset($_GET["id_transaksi"]) && isset($_GET["status_pengiriman"]) ){
+    $id_transaksi = $_GET["id_transaksi"];
+    $status_pengiriman = $_GET["status_pengiriman"];
+
+    $query_pengiriman = "UPDATE transaksi_pemesanan SET status_pengiriman ='$status_pengiriman'
+                         WHERE id_transaksi = '$id_transaksi'";
+    $update_pengiriman = mysqli_query($conn, $query_pengiriman);
+
+    if( mysqli_affected_rows($conn) > 0 ){
+      header("location:halaman_supir.php");
+      exit;
+    }
+  }
 ?>
 
 <!DOCTYPE html>
@@ -32,22 +76,24 @@
     <div class="container my-5">
       <div class="row my-4">
           <div class="col-lg-7 my-2">
-            <h1 class="display-4">Selamat Datang, Rafly Sadewa</h1>
+            <h1 class="display-4">Selamat Datang, <?= $supir["nama_krwn"]; ?> </h1>
             <p class="text-muted text-monospace">
               Dibawah ini adalah data pesanan yang anda dapatkan
             </p>
           </div>
           
           <div class="col-lg-5 my-3">
-            <form action="" class="form-inline float-right">
-              <select name="" id="" class="custom-select mr-2">
-                <option value="Available">Available</option>
-                <option value="Not Available">Not Available</option>
+            <form action="" method="POST" class="form-inline float-right">
+              <!-- <input type="hidden" name="id_karyawan" value="<?= $id_karyawan;?>">
+              <input type="hidden" name="jabatan" value="<?= $jabatan;?>"> -->
+              <select name="status_karyawan" id="" class="custom-select mr-2">
+                <option value="Available" <?php if($supir["status_krwn"] == "Available") echo "selected"; ?> >Available</option>
+                <option value="Not Available" <?php if($supir["status_krwn"] == "Not Available") echo "selected";?> >Not Available</option>
               </select>
 
-              <button class="btn btn-primary mr-2">Set Status</button>
+              <button type="submit" name="status" class="btn btn-primary mr-2">Set Status</button>
 
-              <a class="btn btn-danger text-white float-right my-2">
+              <a href="logout.php" class="btn btn-danger text-white float-right my-2">
                   <i class="fa fa-power-off"></i> Logout
               </a>
             </form>
@@ -63,10 +109,10 @@
         </div>
       <?php die; endif; ?>
 
-      <div id="table-data" class="container">
+      <div id="table_data" class="container">
 
-        <table class="table table-bordered">
-          <thead>
+        <table class="table table-bordered table-responsive-sm">
+          <thead class="thead-dark">
             <tr>
               <th scope="col">NO</th>
               <th scope="col">Pemesan</th>
@@ -79,7 +125,7 @@
             </tr>
           </thead>
 
-          <tbody>
+          <tbody class="bg-light">
             <?php $no = 1;
             foreach($result as $rslt):?>
             <tr>
@@ -92,12 +138,22 @@
               <td><?= $rslt["tanggal_sampai"]; ?></td>
               <td>                
                   <?php if($rslt["status_pengiriman"] == "On Progress"):?>
-                    <div class="badge badge-success text-wrap">
+                    <div class="badge badge-warning text-wrap">
                       On Progress
                     </div>
+                    <a 
+                    href="halaman_supir.php?id_transaksi=<?= $rslt["id_transaksi"];?>&status_pengiriman=<?= 'Deliver' ?>" 
+                    class="btn btn-success">Deliver</a>
+                  <?php elseif($rslt["status_pengiriman"] == "Deliver"):?>
+                    <div class="badge badge-warning text-wrap">
+                      Deliver
+                    </div>
+                    <a 
+                    href="halaman_supir.php?id_transaksi=<?= $rslt["id_transaksi"];?>&status_pengiriman=<?= 'Delivered' ?>" 
+                    class="btn btn-success">Finish</a>  
                   <?php else:?>
                     <div class="badge badge-success text-wrap">
-                      Searching Driver
+                      Delivered
                     </div>
                   <?php endif;?>
               </td>

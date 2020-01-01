@@ -1,13 +1,31 @@
 <?php 
   require "functions.php";
 
+  session_start();
+  // Cek user telah login sebagai admin
+  if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && $_SESSION["jabatan"] == "Admin"  ){
+      header("location:login_karyawan.php");
+      exit;
+  }
+
+  $id_karyawan = $_SESSION["id_karyawan"];
+  $jabatan = $_SESSION["jabatan"];
+  // var_dump($id_karyawan); var_dump($jabatan); die;
+
   // Menampilkan halaman admin
+
+  // Query Transaksi
   $query = "SELECT tr.id_transaksi, p.nama_pemesan, tr.jumlah_pesanan, tr.alamat_pengambilan,
-            tr.alamat_tujuan, tr.jenis_pengiriman, tr.tanggal_sampai, tr.status_pengiriman, k.nama_krwn
-            FROM transaksi_pemesanan tr JOIN pemesan p ON (tr.id_pemesan = p.id_pemesan) JOIN karyawan k ON
-            (tr.id_krwn = k.id_krwn)";
+            tr.alamat_tujuan, tr.jenis_pengiriman, tr.tanggal_sampai, tr.status_pengiriman, 
+            tr.nama_krwn
+            FROM transaksi_pemesanan tr JOIN pemesan p ON (tr.id_pemesan = p.id_pemesan)";
   $result = query($query);
   $jmlhpesanan = count($result);
+
+  // Query data Admin
+  $query_admin = "SELECT * FROM karyawan WHERE id_krwn = '$id_karyawan' AND jabatan_krwn = '$jabatan'";
+  $admin = query($query_admin)[0];
+  // var_dump($admin); die;
   
 ?>
 
@@ -29,7 +47,7 @@
       <div class=" row my-4">
 
         <div class="col-lg-7 my-2">
-          <h1 class="">Selamat Datang, Admin Super</h1>
+          <h1 class="">Selamat Datang, <?= $admin["nama_krwn"]; ?></h1>
           <p class="text-muted text-monospace">
             Data dibawah ini adalah data pesanan yang dibuat oleh seluruh cabang
           </p>
@@ -40,7 +58,7 @@
             <span class="fa fa-plus"></span> Tambah Pegawai
           </a>
 
-          <a href="" class="btn btn-danger p-3">
+          <a href="logout.php" class="btn btn-danger p-3">
             <span class="fa fa-power-off"></span> Logout
           </a>
         </div>
@@ -58,10 +76,10 @@
       </div>
     <?php die; endif; ?>
     
-    <div id="table-data" class="container">
+    <div id="table_data" class="container">
       
       <table class="table table-bordered table-responsive-sm">
-        <thead>
+        <thead class="thead-dark">
           <tr>
             <th scope="col">NO</th>
             <th scope="col">NAMA PEMESAN</th>
@@ -73,7 +91,7 @@
             <th scope="col">PENGIRIM UNIT</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="bg-light">
             <?php $no = 1;
             foreach ($result as $rslt): ?>
             <tr>
@@ -85,8 +103,8 @@
               <td><?= $rslt["jenis_pengiriman"]; ?></td>
               <td><?= $rslt["tanggal_sampai"]; ?></td>
               <td>
-                <?php if($rslt["nik_krwn"] == "NULL"):?>
-                    <a href="#" class="btn">Tentukan Supir</a>
+                <?php if($rslt["nama_krwn"] == "Search Driver"):?>
+                    <a href="#" class="btn btn-primary">Tentukan Supir</a>
                 <?php else:?>
                   <p><?= $rslt["nama_krwn"]; ?></p>
                 <?php endif;?>

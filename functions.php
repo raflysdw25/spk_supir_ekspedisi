@@ -74,21 +74,6 @@
             return false;
         }
 
-    function tambah_pesanan($data){
-        global $conn;
-
-        $nama_pesanan = htmlspecialchars($data["Nama Pesanan"]);
-        $alamat_pesanan = htmlspecialchars($data["Alamat Pesanan"]);
-        $alamat_tujuan = htmlspecialchars($data["Alamat Tujuan"]);
-        $jenis_pengiriman = htmlspecialchars($data["Jenis Pengiriman"]);
-        $tanggal = htmlspecialchars($data["Tanggal"]);
-
-        $query = "INSERT INTO transaksi_pemesanan VALUES ('','','','$nama_pesanan','$alamat_pesanan','$alamat_tujuan','$jenis_pengiriman','$tanggal','','')";
-        mysqli_query($conn, $query);
-
-        return mysqli_affected_rows($conn);
-        }
-
         // Hash password
         $password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -104,7 +89,63 @@
 
     // Tombol Tambah Pesanan
 
-    
+    function tambah_pesanan($data){
+        global $conn;
 
+        $id_pemesan = $data["id_pemesan"];
+        $jumlah_pesanan = htmlspecialchars($data["Jumlah_Pesanan"]);
+        $alamat_pesanan = htmlspecialchars($data["Alamat_Pemesan"]);
+        $alamat_tujuan = htmlspecialchars($data["Alamat_Tujuan"]);
+        $jenis_pengiriman = htmlspecialchars($data["Jenis_Pengiriman"]);
+        $status = "On Progress";
+        
+        $tanggal = strtotime($data["Tanggal"]);
+        if( $tanggal ){
+            $tanggal_sampai = date('Y-m-d', $tanggal);
+        }
+        
+        $nama_krwn = "Search Driver";
+
+        $query = "INSERT INTO transaksi_pemesanan VALUES ('','$id_pemesan', '$jumlah_pesanan','$alamat_pesanan','$alamat_tujuan','$jenis_pengiriman','$tanggal_sampai','$status','$nama_krwn')";
+        mysqli_query($conn, $query);
+
+        return mysqli_affected_rows($conn);
+    }
+    
+    // Tambah Cabang
+    function tambah_pemesan($data){
+        global $conn;
+
+        $username = htmlspecialchars($data["username"]);
+        // Cek Username di database, kalo sama tidak bisa mendaftar
+        $result = query("SELECT username_pmsn FROM pemesan WHERE username_pmsn = '$username'");
+        if ( count($result) > 0 ) {
+            echo"
+                <script> 
+                    alert('Username sudah terdaftar');
+                </script>
+            ";
+
+            return false;
+        }
+
+        $password = mysqli_real_escape_string($conn, $data["password"]);
+
+        // Hash password
+        $password = password_hash($password, PASSWORD_DEFAULT);
+
+        $nama_cabang = htmlspecialchars($data["nama_pemesan"]);
+        $alamat_cabang = $data["alamat_pemesan"];
+
+        // Set telephone jadi hanya angka
+        $telephone_cabang = htmlspecialchars($data["telephone_pemesan"]);
+
+        $query = "INSERT INTO pemesan
+                    VALUES 
+                    ('','$username', '$password', '$nama_cabang', '$alamat_cabang', '$telephone_cabang')";
+        mysqli_query($conn, $query);
+        
+        return mysqli_affected_rows($conn);
+    }
     
 ?>
