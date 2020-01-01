@@ -2,7 +2,6 @@
 
 require 'functions.php';
 
-session_start();
 if( isset($_POST["login"]) ) {
 
     $username = $_POST["username"];
@@ -16,10 +15,7 @@ if( isset($_POST["login"]) ) {
         //cek password
         $row = mysqli_fetch_assoc($result);
         if( password_verify($password, $row["password_pmsn"]) ) {
-            $_SESSION["id_pemesan"] = $row["id_pemesan"];
-            $_SESSION["login"] = true;
-            header("location: halaman_pemesan.php");
-            $error = false;
+            header("Location: halaman_pemesan.php");
             exit;
 
         }
@@ -80,7 +76,6 @@ if( isset($_POST["login"]) ) {
                     <div id="btn-login" class="my-3">
                         <button type="submit" name="login" class="btn btn-primary btn-block">SUBMIT</button>
                         <button type="reset" name="reset" class="btn btn-block text-muted">RESET</button>
-                        <a href="tambah_pemesan.php" class="btn btn-block btn-link text-muted">Buat akun pemesan</a>
                     </div>
                 </form>
           </div>

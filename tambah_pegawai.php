@@ -87,13 +87,7 @@
 
                 <div class="form-group">
                     <label for="alamatKaryawan" class="">Alamat Karyawan</label>
-                    <select name="alamat_karyawan" id="" class="custom-select">
-                        <option value="Bandung">Bandung</option>
-                        <option value="Jakarta">Jakarta</option>
-                        <option value="Semarang">Semarang</option>
-                        <option value="Surabaya">Surabaya</option>
-                        <option value="Yogyakarta">Yogyakarta</option>
-                    </select>
+                    <input type="text" class="form-control" placeholder="Alamat Karyawan.." name="alamat_karyawan">
                 </div>
 
                 <div class="form-group">

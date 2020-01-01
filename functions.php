@@ -87,39 +87,6 @@
 
     }
     
-    function tambah_pemesan($data){
-        global $conn;
-
-        // Check kesamaan username yang didaftarkan dengan yang ada di database
-        $username = htmlspecialchars($data["username_pmsn"]);
-        $username_check = query("SELECT username_pmsn FROM pemesan WHERE username_pmsn = '$username'");
-        if ( count($username_check) ) {
-            echo"
-                <script>
-                    alert('Username sudah terdaftar');
-                    document.location.href='tambah_pemesan.php';
-                </script>
-            ";
-
-            return false;
-        }
-
-        // Hash Password
-        $password = mysqli_real_escape_string($conn, $data["password_pmsn"]);
-        $password = password_hash($password, PASSWORD_DEFAULT);
-        
-
-        $nama = htmlspecialchars($data["nama_pmsn"]);
-        $alamat = htmlspecialchars($data["alamat_pemesan"]);
-        $telephone = htmlspecialchars($data["telephone_pemesan"]);
-
-        $query = "INSERT INTO pemesan 
-                    VALUES ('','$username','$password','$nama','$alamat','$telephone')";
-        mysqli_query($conn, $query);
-
-        return mysqli_affected_rows($conn);
-
-    }
 
     
 ?>
