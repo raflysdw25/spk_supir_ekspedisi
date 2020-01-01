@@ -74,6 +74,21 @@
             return false;
         }
 
+    function tambah_pesanan($data){
+        global $conn;
+
+        $nama_pesanan = htmlspecialchars($data["Nama Pesanan"]);
+        $alamat_pesanan = htmlspecialchars($data["Alamat Pesanan"]);
+        $alamat_tujuan = htmlspecialchars($data["Alamat Tujuan"]);
+        $jenis_pengiriman = htmlspecialchars($data["Jenis Pengiriman"]);
+        $tanggal = htmlspecialchars($data["Tanggal"]);
+
+        $query = "INSERT INTO transaksi_pemesanan VALUES ('','','','$nama_pesanan','$alamat_pesanan','$alamat_tujuan','$jenis_pengiriman','$tanggal','','')";
+        mysqli_query($conn, $query);
+
+        return mysqli_affected_rows($conn);
+        }
+
         // Hash password
         $password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -86,6 +101,9 @@
 
 
     }
+
+    // Tombol Tambah Pesanan
+
     
 
     

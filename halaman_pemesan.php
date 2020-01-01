@@ -27,7 +27,7 @@ require 'functions.php';
       </div>
 
       <div id="button" class="my-4">
-        <a class="btn btn-primary">
+        <a class="btn btn-primary" onClick ='top.location="halaman_tambah_pesanan.php"'>
           <i class="fa fa-plus"></i> Tambah Pesanan
         </a>  
         <a class="btn btn-danger float-right px-3">

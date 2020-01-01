@@ -1,3 +1,31 @@
+<?php 
+require 'functions.php';
+
+if( isset($_POST["submit"]) ) {
+
+
+if( tambah_pesanan($_POST) > 0){
+	echo "
+		<script>
+			alert('Pemesanan berhasil ditambahkan!');
+			document.location.href = 'halaman_pemesan.php';
+		</script>
+	";
+} else {
+	echo "
+		<script>
+			alert('Pemesanan gagal ditambahkan!');
+			document.location.href = 'halaman_tambah_pemesanan.php';
+		</script>
+	";
+	}
+
+}
+
+?>
+
+
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,12 +47,12 @@
           
           <div class="form-group">
             <label class="" for="Nama Pesanan">Nama Pesanan</label>
-            <input type="Nama Pesanan" class="form-control" id="Nama Pesanan" " name="Nama Pesanan">
+            <input type="Nama Pesanan" class="form-control" id="Nama Pesanan" " name="Nama Pesanan" required>
           </div>
 
           <div class="form-group">
             <label class="" for="AlamatPemesanan">Alamat Pemesanan</label>
-            <select name="cabang" id="AlamatPemesanan" class="custom-select">
+            <select name="Alamat Pemesanan" id="AlamatPemesanan" class="custom-select">
                 <option value="">Jakarta</option>
                 <option value="">Bandung</option>
                 <option value="">Semarang</option>
@@ -35,7 +63,7 @@
 
           <div class="form-group">
             <label class="" for="AlamatTujuan">Alamat Tujuan</label>
-            <select name="cabang" id="AlamatTujuan" class="custom-select">
+            <select name="Alamat Tujuan" id="AlamatTujuan" class="custom-select">
                 <option value="">Jakarta</option>
                 <option value="">Bandung</option>
                 <option value="">Semarang</option>
@@ -45,27 +73,27 @@
           </div>
           
           <div class="form-group"> 
-            <label class="control-label" for="JenisPengiriman">Jenis Pengiriman</label>
+            <label class="control-label" for="JenisPengiriman" required>Jenis Pengiriman</label>
             <br>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" id="carcarrier" 
-                value="Car Carrier" name="jenis_pengiriman">
+                value="Car Carrier" name="Jenis Pengiriman">
                 <label class="form-check-label" for="carcarrier">Car Carrier</label>
             </div>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" id="safetyride" 
-                value="Safety Ride" name="jenis_pengiriman">
+                value="Safety Ride" name="Jenis Pengiriman">
                 <label class="form-check-label" for="safetyride">Safety Ride</label>
             </div>
           </div>
           
           <div class="form-group">
             <label class="" for="tanggal">Tanggal Sampai</label>
-            <input type="date" name="tanggal" id="tanggal" class="form-control">
+            <input type="date" name="Tanggal" id="tanggal" class="form-control" required>
           </div>
           
           <div class="text-center">
-            <button type="submit" class="btn btn-success">Tambah Pesanan</button>
+            <button type="submit" class="btn btn-success" name="submit">Tambah Pesanan</button>
             <a class="btn btn-danger text-white">Batalkan Pesanan</a>
           </div>
     </form>
