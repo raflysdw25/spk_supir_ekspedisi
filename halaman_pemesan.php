@@ -13,7 +13,8 @@
                       tr.alamat_tujuan, tr.jenis_pengiriman, tr.tanggal_sampai, tr.status_pengiriman, 
                       tr.nama_krwn
                       FROM transaksi_pemesanan tr 
-                      WHERE tr.id_pemesan = '$id_pemesan'";
+                      WHERE tr.id_pemesan = '$id_pemesan'
+                      ORDER BY tr.id_transaksi DESC";
   $transaksi_pemesan = query($query_transaksi);
   $jmlhtransaksi = count($transaksi_pemesan);
 
@@ -86,7 +87,6 @@
                   <th scope="col">ID Transaksi</th>
                   <th scope="col">Jumlah Pesanan</th>
                   <th scope="col">Alamat Pengambilan</th>
-                  <th scope="col">Alamat Tujuan</th>
                   <th scope="col">Jenis Pengiriman</th>
                   <th scope="col">Tanggal Sampai</th>
                   <th scope="col">Status Pengiriman</th>
@@ -98,7 +98,6 @@
                     <td><?= $transaksi["id_transaksi"];?></td>
                     <td><?= $transaksi["jumlah_pesanan"];?></td>
                     <td><?= $transaksi["alamat_pengambilan"];?></td>
-                    <td><?= $transaksi["alamat_tujuan"];?></td>
                     <td><?= $transaksi["jenis_pengiriman"];?></td>
                     <td><?= $transaksi["tanggal_sampai"];?></td>
                     <td>

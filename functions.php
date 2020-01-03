@@ -115,7 +115,7 @@
         $alamat_pengambilan = htmlspecialchars($data["Alamat_Pengambilan"]);
         $alamat_tujuan = htmlspecialchars($data["Alamat_Tujuan"]);
         $jenis_pengiriman = htmlspecialchars($data["Jenis_Pengiriman"]);
-        $status = "On Progress";
+        $status = "Search Driver";
         
         $tanggal = strtotime($data["Tanggal"]);
         if( $tanggal ){

@@ -21,7 +21,7 @@
     // mysqli_query($conn,$query_update_status);
 
     $update_nama = $result_krwn["nama_krwn"];
-    $query_update = "UPDATE transaksi_pemesanan SET nama_krwn = '$update_nama' 
+    $query_update = "UPDATE transaksi_pemesanan SET nama_krwn = '$update_nama', status_pengiriman = 'On Progress' 
                       WHERE id_transaksi ='$id_transaksi'";
     mysqli_query($conn, $query_update);
     
@@ -44,7 +44,8 @@
   $query = "SELECT tr.id_transaksi, p.nama_pemesan, tr.jumlah_pesanan, tr.alamat_pengambilan,
             tr.alamat_tujuan, tr.jenis_pengiriman, tr.tanggal_sampai, tr.status_pengiriman, 
             tr.nama_krwn
-            FROM transaksi_pemesanan tr JOIN pemesan p ON (tr.id_pemesan = p.id_pemesan)";
+            FROM transaksi_pemesanan tr JOIN pemesan p ON (tr.id_pemesan = p.id_pemesan)
+            ORDER BY tr.id_transaksi DESC";
   $result = query($query);
   $jmlhpesanan = count($result);
 
@@ -116,6 +117,7 @@
             <th scope="col">ALAMAT TUJUAN</th>
             <th scope="col">JENIS PENGIRIMAN</th>
             <th scope="col">TANGGAL SAMPAI</th>
+            <th scope="col">STATUS PENGIRIMAN</th>
             <th scope="col">PENGIRIM UNIT</th>
           </tr>
         </thead>
@@ -130,6 +132,7 @@
               <td><?= $rslt["alamat_tujuan"]; ?></td>
               <td><?= $rslt["jenis_pengiriman"]; ?></td>
               <td><?= $rslt["tanggal_sampai"]; ?></td>
+              <td><?= $rslt["status_pengiriman"];?></td>
               <td>
                 <?php if($rslt["nama_krwn"] == "Search Driver"):?>
                     <a href="konversi_data.php?id_transaksi=<?= $rslt["id_transaksi"];?>" class="btn btn-primary">Tentukan Supir</a>

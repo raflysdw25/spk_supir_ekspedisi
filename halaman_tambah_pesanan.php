@@ -23,14 +23,14 @@
       echo "
         <script>
           alert('Pemesanan berhasil ditambahkan!');
-          
+          document.location.href='halaman_pemesan.php';
         </script>
       ";
     } else {
       echo "
         <script>
           alert('Pesanan gagal ditambahkan!');
-          document.location.href='halaman_pemesan.php';
+          
         </script>
       ";
        echo mysqli_error($conn); 

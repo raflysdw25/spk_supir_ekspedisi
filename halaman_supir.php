@@ -21,7 +21,8 @@
   $query = "SELECT tr.id_transaksi, p.nama_pemesan, tr.jumlah_pesanan, tr.alamat_pengambilan,
             tr.alamat_tujuan, tr.jenis_pengiriman, tr.tanggal_sampai, tr.status_pengiriman
             FROM transaksi_pemesanan tr JOIN pemesan p ON (tr.id_pemesan = p.id_pemesan)
-            WHERE tr.nama_krwn = '$nama_krwn'";
+            WHERE tr.nama_krwn = '$nama_krwn'
+            ORDER BY tr.id_transaksi DESC";
   $result = query($query);
   $jmlhpesanan = count($result);
 
