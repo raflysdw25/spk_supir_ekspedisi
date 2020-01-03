@@ -84,8 +84,6 @@
           
           <div class="col-lg-5 my-3">
             <form action="" method="POST" class="form-inline float-right">
-              <!-- <input type="hidden" name="id_karyawan" value="<?= $id_karyawan;?>">
-              <input type="hidden" name="jabatan" value="<?= $jabatan;?>"> -->
               <select name="status_karyawan" id="" class="custom-select mr-2">
                 <option value="Available" <?php if($supir["status_krwn"] == "Available") echo "selected"; ?> >Available</option>
                 <option value="Not Available" <?php if($supir["status_krwn"] == "Not Available") echo "selected";?> >Not Available</option>

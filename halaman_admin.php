@@ -5,7 +5,7 @@
   // var_dump($_SESSION["login"]);
   // var_dump($_SESSION["id_karyawan"]);
   // Cek user telah login sebagai admin
-  if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && $_SESSION["jabatan"] == "Admin"  ){
+  if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && ($_SESSION["jabatan"] == "Admin")  ){
       header("location:login_karyawan.php");
       exit;
   }
@@ -15,10 +15,10 @@
     $id_transaksi = $_GET["id_transaksi"];
     $query_karyawan = "SELECT * FROM karyawan WHERE id_krwn = '$id'";
     $result_krwn = query($query_karyawan)[0];
-    $update_status = $result_krwn["status_krwn"];
-    $query_update_status = "UPDATE karyawan SET status_krwn = '$update_status' 
-                            WHERE id_krwn ='$id'";
-    mysqli_query($conn,$query_update_status);
+    // $update_status = $result_krwn["status_krwn"];
+    // $query_update_status = "UPDATE karyawan SET status_krwn = '$update_status' 
+    //                         WHERE id_krwn ='$id'";
+    // mysqli_query($conn,$query_update_status);
 
     $update_nama = $result_krwn["nama_krwn"];
     $query_update = "UPDATE transaksi_pemesanan SET nama_krwn = '$update_nama' 
