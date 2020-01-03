@@ -138,7 +138,7 @@
               <td><?= $rslt["tanggal_sampai"]; ?></td>
               <td>                
                   <?php if($rslt["status_pengiriman"] == "On Progress"):?>
-                    <div class="badge badge-warning text-wrap">
+                    <div class="badge badge-secondary text-wrap">
                       On Progress
                     </div>
                     <a 

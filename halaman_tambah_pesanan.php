@@ -30,11 +30,11 @@
       echo "
         <script>
           alert('Pesanan gagal ditambahkan!');
-          
+          document.location.href='halaman_pemesan.php';
         </script>
       ";
        echo mysqli_error($conn); 
-      // $_SESSION["error_transaksi"] = true;
+      $_SESSION["error_transaksi"] = true;
     }
 
   }
@@ -77,15 +77,15 @@
 
                 <!-- Atur sesuai alamat pemesan sesuai dengan id_pemesan -->
                 <div class="form-group">
-                  <label class="" for="AlamatPemesanan">Cabang Pemesanan</label>
-                  <input type="text" name="Alamat_Pemesan" id="" class="form-control" value="<?= $pemesan_one["nama_pemesan"];?>" readonly>
+                  <label class="" for="AlamatTujuan">Cabang Tujuan</label>
+                  <input type="text" name="Alamat_Tujuan" id="" class="form-control" value="<?= $pemesan_one["nama_pemesan"];?>" readonly>
                 </div>
 
 
                 <!-- Buat list alamat tujuan, ambil dari database, kemudian valuenya diubah dengan alamatnya dari pemesan -->
                 <div class="form-group">
-                  <label class="" for="AlamatTujuan">Alamat Tujuan</label>
-                  <select name="Alamat_Tujuan" id="AlamatTujuan" class="custom-select">
+                  <label class="" for="AlamatPengambilan">Cabang Pengambilan</label>
+                  <select name="Alamat_Pengambilan" id="AlamatTujuan" class="custom-select">
                       <option value="" aria-readonly="true">Pilih Alamat Tujuan</option>
                       <?php foreach($pemesan_all as $pemesan): ?>
                         <option value="<?= $pemesan["nama_pemesan"]; ?>"> <?= $pemesan["nama_pemesan"]; ?> </option>

@@ -16,6 +16,24 @@
         return $rows;
     }
 
+    
+    // Function Konversi Umur
+    function umur_karyawan($birthdate) {
+        $birthdate = date('Ymd', strtotime($birthdate));
+        $diff = date('Ymd') - $birthdate;
+        return substr($diff, 0, -4);
+    }
+
+    // Mendapatkan nama
+    function getNama($id){
+        global $conn;
+        $result = mysqli_query($conn, "SELECT * FROM karyawan WHERE id_krwn = '$id'");
+
+        $calon = mysqli_fetch_assoc($result);
+
+        return $calon["nama_krwn"];
+    } 
+
 
     // Insert Data
     function tambah_pegawai($data){
@@ -94,7 +112,7 @@
 
         $id_pemesan = $data["id_pemesan"];
         $jumlah_pesanan = htmlspecialchars($data["Jumlah_Pesanan"]);
-        $alamat_pesanan = htmlspecialchars($data["Alamat_Pemesan"]);
+        $alamat_pengambilan = htmlspecialchars($data["Alamat_Pengambilan"]);
         $alamat_tujuan = htmlspecialchars($data["Alamat_Tujuan"]);
         $jenis_pengiriman = htmlspecialchars($data["Jenis_Pengiriman"]);
         $status = "On Progress";
@@ -106,7 +124,7 @@
         
         $nama_krwn = "Search Driver";
 
-        $query = "INSERT INTO transaksi_pemesanan VALUES ('','$id_pemesan', '$jumlah_pesanan','$alamat_pesanan','$alamat_tujuan','$jenis_pengiriman','$tanggal_sampai','$status','$nama_krwn')";
+        $query = "INSERT INTO transaksi_pemesanan VALUES ('','$id_pemesan', '$jumlah_pesanan','$alamat_pengambilan','$alamat_tujuan','$jenis_pengiriman','$tanggal_sampai','$status','$nama_krwn')";
         mysqli_query($conn, $query);
 
         return mysqli_affected_rows($conn);
@@ -117,8 +135,9 @@
         global $conn;
 
         $username = htmlspecialchars($data["username"]);
+        $nama_cabang = htmlspecialchars($data["nama_pemesan"]);
         // Cek Username di database, kalo sama tidak bisa mendaftar
-        $result = query("SELECT username_pmsn FROM pemesan WHERE username_pmsn = '$username'");
+        $result = query("SELECT username_pmsn, nama_pemesan FROM pemesan WHERE username_pmsn = '$username' AND nama_pemesan = '$nama_cabang'");
         if ( count($result) > 0 ) {
             echo"
                 <script> 
@@ -134,7 +153,7 @@
         // Hash password
         $password = password_hash($password, PASSWORD_DEFAULT);
 
-        $nama_cabang = htmlspecialchars($data["nama_pemesan"]);
+        
         $alamat_cabang = $data["alamat_pemesan"];
 
         // Set telephone jadi hanya angka

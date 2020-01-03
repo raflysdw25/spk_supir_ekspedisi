@@ -2,10 +2,36 @@
   require "functions.php";
 
   session_start();
+  // var_dump($_SESSION["login"]);
+  // var_dump($_SESSION["id_karyawan"]);
   // Cek user telah login sebagai admin
   if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && $_SESSION["jabatan"] == "Admin"  ){
       header("location:login_karyawan.php");
       exit;
+  }
+
+  if( isset($_GET["id_krwn"]) && isset($_GET["id_transaksi"]) ){
+    $id = $_GET["id_krwn"];
+    $id_transaksi = $_GET["id_transaksi"];
+    $query_karyawan = "SELECT * FROM karyawan WHERE id_krwn = '$id'";
+    $result_krwn = query($query_karyawan)[0];
+    $update_status = $result_krwn["status_krwn"];
+    $query_update_status = "UPDATE karyawan SET status_krwn = '$update_status' 
+                            WHERE id_krwn ='$id'";
+    mysqli_query($conn,$query_update_status);
+
+    $update_nama = $result_krwn["nama_krwn"];
+    $query_update = "UPDATE transaksi_pemesanan SET nama_krwn = '$update_nama' 
+                      WHERE id_transaksi ='$id_transaksi'";
+    mysqli_query($conn, $query_update);
+    
+    if ( mysqli_affected_rows($conn) > 0 ) {
+        echo "
+          <script>
+              alert('Data Transaksi '$id_transaksi' sudah mendapatkan driver');
+          </script>
+        ";
+    }
   }
 
   $id_karyawan = $_SESSION["id_karyawan"];
@@ -26,6 +52,8 @@
   $query_admin = "SELECT * FROM karyawan WHERE id_krwn = '$id_karyawan' AND jabatan_krwn = '$jabatan'";
   $admin = query($query_admin)[0];
   // var_dump($admin); die;
+
+
   
 ?>
 
@@ -104,7 +132,7 @@
               <td><?= $rslt["tanggal_sampai"]; ?></td>
               <td>
                 <?php if($rslt["nama_krwn"] == "Search Driver"):?>
-                    <a href="#" class="btn btn-primary">Tentukan Supir</a>
+                    <a href="konversi_data.php?id_transaksi=<?= $rslt["id_transaksi"];?>" class="btn btn-primary">Tentukan Supir</a>
                 <?php else:?>
                   <p><?= $rslt["nama_krwn"]; ?></p>
                 <?php endif;?>

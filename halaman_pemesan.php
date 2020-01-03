@@ -106,7 +106,7 @@
                       if($transaksi["nama_krwn"] == "Search Driver"):
                         echo "Search Driver";
                       else: 
-                        $transaksi["status_pengiriman"];
+                        echo $transaksi["status_pengiriman"];
                       endif;
                       ?>
                     </td>
