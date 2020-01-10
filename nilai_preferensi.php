@@ -3,11 +3,26 @@
 
     session_start();
     // Cek user telah login sebagai admin
-    if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && $_SESSION["jabatan"] == "Admin"  ){
-        header("location:login_karyawan.php");
-        exit;
+    if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && !isset($_SESSION["jabatan"])){        
+        echo "
+            <script>
+                alert('Belum melakukan login, silahkan login terlebih dahulu');
+                document.location.href='login_karyawan.php';
+            </script>
+        ";
+            exit;
+    }else if($_SESSION["jabatan"] != "Admin"){
+        echo "
+        <script>
+            alert('Anda bukan admin, silahkan login sebagai admin');
+            document.location.href='login_karyawan.php';
+        </script>
+        ";
+        session_destroy();
+         exit;
     }
 
+    
     $id_transaksi = $_GET["id_transaksi"];
 
     // Ambil table Bobot
@@ -31,6 +46,7 @@
 
     $query_spk = "SELECT * FROM hasil_spk WHERE id_transaksi = '$id_transaksi'";
     $spk_check = query($query_spk);
+    
 
     if( count($spk_check) > 0){
         $query_delete = "DELETE FROM hasil_spk WHERE id_transaksi = '$id_transaksi'";
@@ -204,7 +220,7 @@
 
     <div class="container my-4">
         <div id="btn_back" class="text-center">
-            <a href="halaman_admin.php?id_krwn=<?= $result[0]["id_krwn"]; ?>&id_transaksi=<?= $id_transaksi; ?>" class="btn btn-primary">Kembali ke Halaman Admin</a>
+            <a href="halaman_admin.php?id_krwn=<?= $result[0]["id_krwn"]; ?>&id_transaksi=<?= $id_transaksi; ?>" class="btn btn-primary">Pilih Supir</a>
             <a href="halaman_admin.php" class="btn btn-danger">Batalkan</a>
         </div>
     </div>

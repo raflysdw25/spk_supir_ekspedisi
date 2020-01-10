@@ -2,43 +2,29 @@
   require "functions.php";
 
   session_start();
-  // var_dump($_SESSION["login"]);
-  // var_dump($_SESSION["id_karyawan"]);
-  // Cek user telah login sebagai admin
-  if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && ($_SESSION["jabatan"] == "Admin")  ){
-      header("location:login_karyawan.php");
+
+  if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && !isset($_SESSION["jabatan"])){        
+    echo "
+        <script>
+            alert('Belum melakukan login, silahkan login terlebih dahulu');
+            document.location.href='login_karyawan.php';
+        </script>
+    ";
+        exit;
+  }else if($_SESSION["jabatan"] != "Admin"){
+      echo "
+      <script>
+          alert('Anda bukan admin, silahkan login sebagai admin');
+          document.location.href='login_karyawan.php';
+      </script>
+      ";
+      session_destroy();
       exit;
-  }
-
-  if( isset($_GET["id_krwn"]) && isset($_GET["id_transaksi"]) ){
-    $id = $_GET["id_krwn"];
-    $id_transaksi = $_GET["id_transaksi"];
-    $query_karyawan = "SELECT * FROM karyawan WHERE id_krwn = '$id'";
-    $result_krwn = query($query_karyawan)[0];
-    // $update_status = $result_krwn["status_krwn"];
-    // $query_update_status = "UPDATE karyawan SET status_krwn = '$update_status' 
-    //                         WHERE id_krwn ='$id'";
-    // mysqli_query($conn,$query_update_status);
-
-    $update_nama = $result_krwn["nama_krwn"];
-    $query_update = "UPDATE transaksi_pemesanan SET nama_krwn = '$update_nama', status_pengiriman = 'On Progress' 
-                      WHERE id_transaksi ='$id_transaksi'";
-    mysqli_query($conn, $query_update);
-    
-    if ( mysqli_affected_rows($conn) > 0 ) {
-        echo "
-          <script>
-              alert('Data Transaksi '$id_transaksi' sudah mendapatkan driver');
-          </script>
-        ";
-    }
   }
 
   $id_karyawan = $_SESSION["id_karyawan"];
   $jabatan = $_SESSION["jabatan"];
-  // var_dump($id_karyawan); var_dump($jabatan); die;
 
-  // Menampilkan halaman admin
 
   // Query Transaksi
   $query = "SELECT tr.id_transaksi, p.nama_pemesan, tr.jumlah_pesanan, tr.alamat_pengambilan,
@@ -52,9 +38,32 @@
   // Query data Admin
   $query_admin = "SELECT * FROM karyawan WHERE id_krwn = '$id_karyawan' AND jabatan_krwn = '$jabatan'";
   $admin = query($query_admin)[0];
-  // var_dump($admin); die;
 
+  // Mengganti data transaksi nama karyawan
+  if( isset($_GET["id_krwn"]) && isset($_GET["id_transaksi"]) ){
+    $id = $_GET["id_krwn"];
+    $id_transaksi = $_GET["id_transaksi"];
+    $query_karyawan = "SELECT * FROM karyawan WHERE id_krwn = '$id'";
+    $result_krwn = query($query_karyawan)[0];
 
+    mysqli_query($conn, "UPDATE karyawan SET status_krwn = 'Not Available' WHERE id_krwn = '$id'");
+    
+    $update_nama = $result_krwn["nama_krwn"];
+    
+    $query_update = "UPDATE transaksi_pemesanan SET nama_krwn = '$update_nama', status_pengiriman = 'On Progress' 
+                      WHERE id_transaksi ='$id_transaksi'";
+    mysqli_query($conn, $query_update);
+    $effect = mysqli_affected_rows($conn);
+    
+    if ( $effect > 0 ) {
+        echo "
+          <script>
+              alert('Data Transaksi sudah mendapatkan driver');
+              document.location.href='halaman_admin.php';
+          </script>
+        ";
+    }
+  }
   
 ?>
 

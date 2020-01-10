@@ -2,6 +2,16 @@
     require 'functions.php';
     session_start();
 
+    if( isset($_SESSION["login"]) && isset($_SESSION["id_karyawan"]) ){
+        if($_SESSION["jabatan"] == "Admin"){
+            header("location:halaman_admin.php");
+            exit;
+        }else{
+            header("location:halama_supir.php");
+            exit;
+        }
+    }
+
     if( isset($_POST["login"]) ){
 
         $username = $_POST["username"];
@@ -79,7 +89,7 @@
 
                     <div id="btn-login" class="my-3">
                         <button type="submit" name="login" class="btn btn-primary btn-block">SUBMIT</button>
-                        <button type="reset" class="btn btn-block text-muted">RESET</button>
+                        <a href="index.php" class="btn btn-block text-muted btn-link">Kembali</a>
                     </div>
                 </form>
           </div>

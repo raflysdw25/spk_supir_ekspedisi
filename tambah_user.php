@@ -3,14 +3,24 @@
     session_start();
 
      // Cek user telah login sebagai admin
-    // if( !isset($_SESSION["login"]) &&  $_SESSION["jabatan"] == "Admin"  ){
-    //     header("location:login_karyawan.php");
-    //     exit;
-    // }else if ( isset($_SESSION["login"]) && $_SESSION["jabatan"] == "Supir" ) {
-        // header("location:" . $_SERVER["HTTP_REFERER"]);
-    //     exit;
-    // }
-
+     if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && !isset($_SESSION["jabatan"])){        
+        echo "
+            <script>
+                alert('Belum melakukan login, silahkan login terlebih dahulu');
+                document.location.href='login_karyawan.php';
+            </script>
+        ";
+            exit;
+    }else if($_SESSION["jabatan"] != "Admin"){
+        echo "
+        <script>
+            alert('Anda bukan admin, silahkan login sebagai admin');
+            document.location.href='login_karyawan.php';
+        </script>
+        ";
+        session_destroy();
+         exit;
+    }
 
     if( !isset($_SESSION["id_krwn"]) && !isset($_SESSION["jabatan_krwn"]) ){
         header("location:tambah_pegawai.php");

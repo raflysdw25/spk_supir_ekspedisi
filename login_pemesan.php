@@ -3,6 +3,11 @@
 require 'functions.php';
 session_start();
 
+if( isset($_SESSION["login"]) && isset($_SESSION["id_pemesan"]) ){
+    header("location:halaman_pemesan.php");
+    exit;
+}
+
 if( isset($_POST["login"]) ) {
 
     $username = $_POST["username"];
@@ -18,6 +23,7 @@ if( isset($_POST["login"]) ) {
         if( password_verify($password, $row["password_pmsn"]) ) {
             $_SESSION["login"] = true;
             $_SESSION["id_pemesan"] = $row["id_pemesan"];
+            $_SESSION["jabatan"] = "Pemesan";
             header("location: halaman_pemesan.php");
             exit;
 
@@ -78,7 +84,8 @@ if( isset($_POST["login"]) ) {
 
                     <div id="btn-login" class="my-3">
                         <button type="submit" name="login" class="btn btn-primary btn-block">SUBMIT</button>
-                        <a href="tambah_pemesan.php" class="btn btn-link btn-block text-muted">Daftar Cabang Baru</a>
+                        <a href="tambah_pemesan.php" class="btn btn-link text-muted">Daftar Cabang Baru</a>
+                        <a href="index.php" class="btn text-muted btn-link">Kembali</a>
                     </div>
                 </form>
           </div>

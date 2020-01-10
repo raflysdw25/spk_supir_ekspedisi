@@ -3,12 +3,23 @@
     session_start();
 
     // Cek user telah login sebagai admin
-    if( !isset($_SESSION["login"]) &&  $_SESSION["jabatan"] == "Admin"  ){
-        header("location:login_karyawan.php");
-        exit;
-    }else if ( isset($_SESSION["login"]) && $_SESSION["jabatan"] == "Supir" ) {
-        header("javascript:history.go(-1)");
-        exit;
+    if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && !isset($_SESSION["jabatan"])){        
+        echo "
+            <script>
+                alert('Belum melakukan login, silahkan login terlebih dahulu');
+                document.location.href='login_karyawan.php';
+            </script>
+        ";
+            exit;
+    }else if($_SESSION["jabatan"] != "Admin"){
+        echo "
+        <script>
+            alert('Anda bukan admin, silahkan login sebagai admin');
+            document.location.href='login_karyawan.php';
+        </script>
+        ";
+        session_destroy();
+         exit;
     }
         
     $error = false;
@@ -137,7 +148,7 @@
                         <span class="fa fa-plus"></span>
                         Tambah Data
                     </button>
-                    <a href="#" class="btn btn-danger">
+                    <a href="halaman_admin.php" class="btn btn-danger">
                         <span class="fa fa-close"></span>
                         Batalkan
                     </a>

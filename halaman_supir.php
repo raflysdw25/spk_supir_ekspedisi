@@ -3,8 +3,22 @@
   // nik_krwn dengan jabatan supir
   session_start();
   // Cek user telah login sebagai supir
-  if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && $_SESSION["jabatan"] == "Supir"  ){
-      header("location:login_karyawan.php");
+  if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && !isset($_SESSION["jabatan"])){        
+    echo "
+        <script>
+            alert('Belum melakukan login, silahkan login terlebih dahulu');
+            document.location.href='login_karyawan.php';
+        </script>
+    ";
+        exit;
+  }else if($_SESSION["jabatan"] != "Supir"){
+      echo "
+      <script>
+          alert('Anda bukan supir, silahkan login sebagai supir');
+          document.location.href='login_karyawan.php';
+      </script>
+      ";
+      session_destroy();
       exit;
   }
 

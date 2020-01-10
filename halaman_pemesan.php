@@ -4,7 +4,12 @@
 
   session_start();
   if( !isset($_SESSION["login"]) && !isset($_SESSION["id_pemesan"])){
-    header("location:login_pemesan.php");
+    echo "
+            <script>
+                alert('Belum melakukan login, silahkan login terlebih dahulu');
+                document.location.href='login_pemesan.php';
+            </script>
+        ";
     exit;
   }
 

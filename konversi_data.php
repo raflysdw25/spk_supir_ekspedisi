@@ -2,9 +2,23 @@
     require 'functions.php';
     session_start();
     // Cek user telah login sebagai admin
-    if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && !isset($_SESSION["jabatan"])){
-        header("location:login_karyawan.php");
-        exit;
+    if( !isset($_SESSION["login"]) && !isset($_SESSION["id_karyawan"]) && !isset($_SESSION["jabatan"])){        
+        echo "
+            <script>
+                alert('Belum melakukan login, silahkan login terlebih dahulu');
+                document.location.href='login_karyawan.php';
+            </script>
+        ";
+            exit;
+    }else if($_SESSION["jabatan"] != "Admin"){
+        echo "
+        <script>
+            alert('Anda bukan admin, silahkan login sebagai admin');
+            document.location.href='login_karyawan.php';
+        </script>
+        ";
+        session_destroy();
+         exit;
     }
 
     $id_transaksi = $_GET["id_transaksi"];
@@ -101,7 +115,7 @@
             $jarak_pengambilan = 324;
         }
 
-        // var_dump($jarak_pengambilan); 
+        // jarak pengambilan
         if($jarak_pengambilan>= 0 && $jarak_pengambilan<=300){
             $nilai_jarak = 1;
         }else if($jarak_pengambilan>= 301 && $jarak_pengambilan<=600){
